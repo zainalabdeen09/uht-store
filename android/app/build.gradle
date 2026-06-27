@@ -1,8 +1,12 @@
-plugins {
-    id "com.android.application"
-    id "kotlin-android"
-    id "dev.flutter.flutter-gradle-plugin"
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
 }
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
@@ -22,8 +26,8 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.uht.store"
-    compileSdk 34
-    ndkVersion flutter.ndkVersion
+    compileSdk 33
+    ndkVersion "25.1.8937393"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -41,7 +45,7 @@ android {
     defaultConfig {
         applicationId "com.uht.store"
         minSdk 21
-        targetSdk 34
+        targetSdk 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
