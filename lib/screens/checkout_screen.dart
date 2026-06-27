@@ -76,15 +76,24 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
     await db.createOrder(orderData);
     await db.clearCart();
-    await TelegramService.sendOrderNotification(orderData);
+    final telegramResult = await TelegramService.sendOrderNotification(orderData);
 
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('تم إرسال الطلب بنجاح! شكراً لتسوقك من Uhtred Store'),
-          backgroundColor: Color(0xFF22c55e),
-        ),
-      );
+      if (telegramResult['success'] == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('تم إرسال الطلب بنجاح! شكراً لتسوقك من Uhtred Store'),
+            backgroundColor: Color(0xFF22c55e),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('الطلب محفوظ لكن لم يرسل إشعار التليgram: ${telegramResult['error']}'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      }
       Navigator.pop(context);
       Navigator.pop(context);
     }

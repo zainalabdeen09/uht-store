@@ -8,22 +8,22 @@ class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
   @override
-  State<CartScreen> createState() => _CartScreenState();
+  State<CartScreen> createState() => CartScreenState();
 }
 
-class _CartScreenState extends State<CartScreen> {
+class CartScreenState extends State<CartScreen> {
   final db = DatabaseHelper();
   List<CartItem> items = [];
 
   @override
   void initState() {
     super.initState();
-    _load();
+    load();
   }
 
-  Future _load() async {
+  Future load() async {
     final cartItems = await db.getCartItems();
-    setState(() => items = cartItems);
+    if (mounted) setState(() => items = cartItems);
   }
 
   int get _total => items.fold(0, (sum, item) => sum + item.total);
@@ -32,7 +32,7 @@ class _CartScreenState extends State<CartScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => CheckoutScreen(items: items)),
-    ).then((_) => _load());
+    ).then((_) => load());
   }
 
   @override
@@ -48,7 +48,7 @@ class _CartScreenState extends State<CartScreen> {
                   icon: const Icon(Icons.delete_sweep),
                   onPressed: () async {
                     await db.clearCart();
-                    _load();
+                    load();
                   },
                 ),
               ]
@@ -90,7 +90,7 @@ class _CartScreenState extends State<CartScreen> {
                                     icon: Icon(Icons.close, size: 18, color: Colors.red[300]),
                                     onPressed: () async {
                                       await db.removeCartItem(items[i].id ?? 0);
-                                      _load();
+                                      load();
                                     },
                                   ),
                                 ],
@@ -111,7 +111,7 @@ class _CartScreenState extends State<CartScreen> {
                                         onPressed: item.quantity > 1
                                             ? () async {
                                                 await db.updateCartItemQty(items[i].id ?? 0, item.quantity - 1);
-                                                _load();
+                                                load();
                                               }
                                             : null,
                                       ),
@@ -120,7 +120,7 @@ class _CartScreenState extends State<CartScreen> {
                                         icon: const Icon(Icons.add_circle_outline, size: 20),
                                         onPressed: () async {
                                           await db.updateCartItemQty(items[i].id ?? 0, item.quantity + 1);
-                                          _load();
+                                          load();
                                         },
                                       ),
                                     ],

@@ -22,8 +22,6 @@ class CartItem {
   int get total => price * quantity;
 
   Map<String, dynamic> toMap() => {
-        'id': null,
-        'userId': 0,
         'productKey': productKey,
         'productName': productName,
         'printing': printing,
@@ -34,10 +32,11 @@ class CartItem {
       };
 
   static CartItem fromMap(Map<String, dynamic> m) => CartItem(
+        id: m['id'] as int?,
         productKey: m['productKey'],
         productName: m['productName'],
         printing: m['printing'],
-        price: m['price'],
+        price: m['price'] is int ? m['price'] as int : (m['price'] as num).toInt(),
         color: m['color'],
         size: m['size'] ?? 'L',
         quantity: m['quantity'] ?? 1,

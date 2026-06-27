@@ -6,7 +6,7 @@ class TelegramService {
   static const String _chatId = '@uhtred_store';
   static const String _apiUrl = 'https://api.telegram.org/bot$_token/sendMessage';
 
-  static Future<bool> sendOrderNotification(Map<String, dynamic> order) async {
+  static Future<Map<String, dynamic>> sendOrderNotification(Map<String, dynamic> order) async {
     try {
       final items = jsonDecode(order['items'] ?? '[]') as List;
       final itemsHtml = items.asMap().entries.map((e) {
@@ -44,9 +44,13 @@ $itemsHtml
         }),
       );
 
-      return response.statusCode == 200;
+      if (response.statusCode == 200) {
+        return {'success': true, 'error': null};
+      }
+      final body = jsonDecode(response.body);
+      return {'success': false, 'error': body['description'] ?? 'خطأ غير معروف'};
     } catch (e) {
-      return false;
+      return {'success': false, 'error': e.toString()};
     }
   }
 }

@@ -85,6 +85,16 @@ class DatabaseHelper {
   }
 
   Future _seedData(Database db) async {
+    await db.insert('users', {
+      'username': 'za_c10',
+      'password': 'za_c10',
+      'email': '',
+      'phone': '',
+      'gender': '',
+      'address': '',
+      'avatarPath': '',
+      'createdAt': DateTime.now().toIso8601String(),
+    });
     await db.insert('sections', {'id': 1, 'name': 'تيشيرتات', 'note': ''});
     await db.insert('sections', {'id': 3, 'name': 'تيشيرتات GYM', 'note': ''});
     await db.insert('sections', {'id': 4, 'name': 'سيتات GYM رياضية', 'note': ''});
@@ -204,16 +214,9 @@ class DatabaseHelper {
       await db.update('cart_items', {'quantity': currentQty + item.quantity},
           where: 'id = ?', whereArgs: [existing.first['id']]);
     } else {
-      await db.insert('cart_items', {
-        'userId': userId,
-        'productKey': item.productKey,
-        'productName': item.productName,
-        'printing': item.printing,
-        'price': item.price,
-        'color': item.color,
-        'size': item.size,
-        'quantity': item.quantity,
-      });
+      final map = item.toMap();
+      map['userId'] = userId;
+      await db.insert('cart_items', map);
     }
   }
 

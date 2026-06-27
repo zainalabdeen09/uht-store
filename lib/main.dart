@@ -148,6 +148,7 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   int _index = 0;
+  final _cartKey = GlobalKey<CartScreenState>();
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +158,7 @@ class _MainShellState extends State<MainShell> {
     final screens = <Widget>[
       const HomeScreen(),
       const _SectionsGrid(),
-      const CartScreen(),
+      CartScreen(key: _cartKey),
       const ProfileScreen(),
       if (isAdmin) const AdminDashboardScreen(),
     ];
@@ -177,7 +178,10 @@ class _MainShellState extends State<MainShell> {
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
-        onDestinationSelected: (i) => setState(() => _index = i),
+        onDestinationSelected: (i) {
+          setState(() => _index = i);
+          if (i == 2) _cartKey.currentState?.load();
+        },
         destinations: destinations,
       ),
     );
