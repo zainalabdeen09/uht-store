@@ -22,7 +22,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.uht.store"
-    compileSdk 33
+    compileSdk 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -41,7 +41,7 @@ android {
     defaultConfig {
         applicationId "com.uht.store"
         minSdk 21
-        targetSdk 33
+        targetSdk 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
