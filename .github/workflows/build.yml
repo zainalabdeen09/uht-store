@@ -22,27 +22,28 @@ jobs:
 
       - run: flutter config --no-analytics
 
-      - name: Use template android project
+      - name: Regenerate Android project from Flutter template
         run: |
-          cd /tmp
-          flutter create --org com.uht --project-name uht_store template_app
-          cp -r template_app/android/* $GITHUB_WORKSPACE/android/
-          cp template_app/.gitignore $GITHUB_WORKSPACE/
-          # Fix Kotlin stdlib conflicts
-          cat >> $GITHUB_WORKSPACE/android/build.gradle << 'EOF'
+          rm -rf android/
+          flutter create --platforms=android --org com.uht --project-name uht_store .
 
-          subprojects {
-              configurations.all {
-                  resolutionStrategy {
-                      eachDependency { details ->
-                          if (details.requested.group == 'org.jetbrains.kotlin') {
-                              details.useVersion kotlin_version
-                          }
-                      }
-                  }
-              }
-          }
-          EOF
+      - name: Fix Kotlin plugin version to 2.0.21
+        run: sed -i 's/id "org.jetbrains.kotlin.android" version "[^"]*"/id "org.jetbrains.kotlin.android" version "2.0.21"/' android/settings.gradle
+
+      - name: Add resolution strategy for Kotlin stdlib
+        run: |
+          echo "" >> android/build.gradle
+          echo "subprojects {" >> android/build.gradle
+          echo "    configurations.all {" >> android/build.gradle
+          echo "        resolutionStrategy {" >> android/build.gradle
+          echo "            eachDependency { details ->" >> android/build.gradle
+          echo '                if (details.requested.group == "org.jetbrains.kotlin") {' >> android/build.gradle
+          echo "                    details.useVersion kotlin_version" >> android/build.gradle
+          echo "                }" >> android/build.gradle
+          echo "            }" >> android/build.gradle
+          echo "        }" >> android/build.gradle
+          echo "    }" >> android/build.gradle
+          echo "}" >> android/build.gradle
 
       - run: flutter pub get
 
