@@ -71,7 +71,7 @@ class UhtredStoreApp extends StatelessWidget {
       elevation: 0,
       centerTitle: true,
     ),
-    cardTheme: CardThemeData(
+    cardTheme: CardTheme(
       color: const Color(0xFF0f0f1a),
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -130,7 +130,7 @@ class UhtredStoreApp extends StatelessWidget {
       onSurface: Color(0xFF1a1a2e),
     ),
     appBarTheme: const AppBarTheme(centerTitle: true),
-    cardTheme: CardThemeData(
+    cardTheme: CardTheme(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
     ),

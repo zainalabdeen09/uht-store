@@ -1,4 +1,5 @@
 class CartItem {
+  final int? id;
   String productKey;
   String productName;
   String printing;
@@ -8,6 +9,7 @@ class CartItem {
   int quantity;
 
   CartItem({
+    this.id,
     required this.productKey,
     required this.productName,
     required this.printing,

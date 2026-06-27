@@ -163,10 +163,10 @@ class DatabaseHelper {
       FROM sections s ORDER BY s.id ASC
     ''');
     return maps.map((m) => Section(
-      id: m['id'],
-      name: m['name'],
-      note: m['note'] ?? '',
-      productCount: m['productCount'] ?? 0,
+      id: m['id'] as int,
+      name: m['name'] as String,
+      note: (m['note'] as String?) ?? '',
+      productCount: (m['productCount'] as int?) ?? 0,
     )).toList();
   }
 
