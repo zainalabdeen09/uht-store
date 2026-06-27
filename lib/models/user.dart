@@ -2,11 +2,11 @@ class AppUser {
   final int? id;
   final String username;
   final String password;
-  final String email;
-  final String phone;
-  final String gender;
-  final String address;
-  final String avatarPath;
+  String email;
+  String phone;
+  String gender;
+  String address;
+  String avatarPath;
   final String createdAt;
 
   AppUser({
