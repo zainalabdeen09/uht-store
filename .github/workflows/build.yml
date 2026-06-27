@@ -22,29 +22,29 @@ jobs:
 
       - run: flutter config --no-analytics
 
-      - name: Generate clean Flutter project
+      - name: Use template android project
         run: |
           cd /tmp
           flutter create --org com.uht --project-name uht_store template_app
           cp -r template_app/android/* $GITHUB_WORKSPACE/android/
           cp template_app/.gitignore $GITHUB_WORKSPACE/
-          # Force Kotlin version consistency
-          echo "" >> $GITHUB_WORKSPACE/android/app/build.gradle
-          echo "configurations.all {" >> $GITHUB_WORKSPACE/android/app/build.gradle
-          echo "    resolutionStrategy {" >> $GITHUB_WORKSPACE/android/app/build.gradle
-          echo '        force "org.jetbrains.kotlin:kotlin-stdlib:1.9.22"' >> $GITHUB_WORKSPACE/android/app/build.gradle
-          echo '        force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.22"' >> $GITHUB_WORKSPACE/android/app/build.gradle
-          echo '        force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.22"' >> $GITHUB_WORKSPACE/android/app/build.gradle
-          echo "    }" >> $GITHUB_WORKSPACE/android/app/build.gradle
-          echo "}" >> $GITHUB_WORKSPACE/android/app/build.gradle
+          # Fix Kotlin stdlib conflicts
+          cat >> $GITHUB_WORKSPACE/android/build.gradle << 'EOF'
+
+subprojects {
+    configurations.all {
+        resolutionStrategy {
+            eachDependency { details ->
+                if (details.requested.group == 'org.jetbrains.kotlin') {
+                    details.useVersion kotlin_version
+                }
+            }
+        }
+    }
+}
+EOF
 
       - run: flutter pub get
-
-      - name: Add local.properties
-        run: |
-          echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties
-          echo "flutter.versionCode=1" >> android/local.properties
-          echo "flutter.versionName=1.0" >> android/local.properties
 
       - run: flutter build apk --release
 
