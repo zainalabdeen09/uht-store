@@ -1,4 +1,4 @@
-name: Build APK
+name: Build APK & Web
 
 on:
   push:
@@ -27,14 +27,14 @@ jobs:
           rm -rf android/
           flutter create --platforms=android --org com.uht --project-name uht_store .
 
-      - name: Dump generated Gradle files for debugging
+      - name: Restore app label to "Uhtred Store"
         run: |
-          echo "=== build.gradle ==="
-          cat android/build.gradle
-          echo "=== settings.gradle ==="
-          cat android/settings.gradle
-          echo "=== app/build.gradle ==="
-          cat android/app/build.gradle
+          sed -i 's/android:label="[^"]*"/android:label="Uhtred Store"/' android/app/src/main/AndroidManifest.xml
+
+      - name: Generate app icons
+        run: |
+          cp assets/app_icon.jpg /tmp/app_icon.jpg
+          dart run flutter_launcher_icons
 
       - name: Fix Kotlin plugin version and add ext.kotlin_version
         run: |
@@ -68,3 +68,12 @@ jobs:
         with:
           name: app-release.apk
           path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Build web version
+        run: |
+          flutter build web --release
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: build/web

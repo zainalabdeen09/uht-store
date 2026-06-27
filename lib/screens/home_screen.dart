@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'متجر يوترد - لكل ما يحتاجه الشباب',
+                    'ملابس رياضية عصرية بجودة عالية',
                     style: TextStyle(
                       fontSize: 16,
                       color: theme.colorScheme.onSurface.withOpacity(0.7),
