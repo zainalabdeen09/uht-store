@@ -1,39 +1,36 @@
 class Product {
-  final int? id;
+  final String id;
   final String name;
-  final String category;
-  final double buyPrice;
-  final double sellPrice;
-  final int stock;
-  final String imageUrl;
+  final List<String> colors;
+  final Map<String, int> prices;
+  final int sectionId;
 
   Product({
-    this.id,
+    required this.id,
     required this.name,
-    this.category = '',
-    required this.buyPrice,
-    required this.sellPrice,
-    this.stock = 0,
-    this.imageUrl = '',
+    required this.colors,
+    required this.prices,
+    this.sectionId = 0,
   });
 
   Map<String, dynamic> toMap() => {
         'id': id,
         'name': name,
-        'category': category,
-        'buyPrice': buyPrice,
-        'sellPrice': sellPrice,
-        'stock': stock,
-        'imageUrl': imageUrl,
+        'colors': colors.join(','),
+        'prices': prices.entries.map((e) => '${e.key}:${e.value}').join('||'),
+        'sectionId': sectionId,
       };
 
   static Product fromMap(Map<String, dynamic> m) => Product(
         id: m['id'],
         name: m['name'],
-        category: m['category'] ?? '',
-        buyPrice: (m['buyPrice'] ?? 0).toDouble(),
-        sellPrice: (m['sellPrice'] ?? 0).toDouble(),
-        stock: m['stock'] ?? 0,
-        imageUrl: m['imageUrl'] ?? '',
+        colors: (m['colors'] as String).split(','),
+        prices: Map.fromEntries(
+          (m['prices'] as String).split('||').map((e) {
+            final parts = e.split(':');
+            return MapEntry(parts[0], int.parse(parts[1]));
+          }),
+        ),
+        sectionId: m['sectionId'] ?? 0,
       );
 }
