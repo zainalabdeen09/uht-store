@@ -28,6 +28,15 @@ jobs:
           flutter create --org com.uht --project-name uht_store template_app
           cp -r template_app/android/* $GITHUB_WORKSPACE/android/
           cp template_app/.gitignore $GITHUB_WORKSPACE/
+          # Force Kotlin version consistency
+          echo "" >> $GITHUB_WORKSPACE/android/app/build.gradle
+          echo "configurations.all {" >> $GITHUB_WORKSPACE/android/app/build.gradle
+          echo "    resolutionStrategy {" >> $GITHUB_WORKSPACE/android/app/build.gradle
+          echo '        force "org.jetbrains.kotlin:kotlin-stdlib:1.9.22"' >> $GITHUB_WORKSPACE/android/app/build.gradle
+          echo '        force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.22"' >> $GITHUB_WORKSPACE/android/app/build.gradle
+          echo '        force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.22"' >> $GITHUB_WORKSPACE/android/app/build.gradle
+          echo "    }" >> $GITHUB_WORKSPACE/android/app/build.gradle
+          echo "}" >> $GITHUB_WORKSPACE/android/app/build.gradle
 
       - run: flutter pub get
 
