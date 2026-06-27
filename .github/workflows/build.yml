@@ -1,4 +1,4 @@
-name: Build APK & Web
+name: Build APK
 
 on:
   push:
@@ -30,11 +30,6 @@ jobs:
       - name: Restore app label to "Uhtred Store"
         run: |
           sed -i 's/android:label="[^"]*"/android:label="Uhtred Store"/' android/app/src/main/AndroidManifest.xml
-
-      - name: Generate app icons
-        run: |
-          cp assets/app_icon.jpg /tmp/app_icon.jpg
-          dart run flutter_launcher_icons
 
       - name: Fix Kotlin plugin version and add ext.kotlin_version
         run: |
@@ -68,12 +63,3 @@ jobs:
         with:
           name: app-release.apk
           path: build/app/outputs/flutter-apk/app-release.apk
-
-      - name: Build web version
-        run: |
-          flutter build web --release
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: web-build
-          path: build/web
