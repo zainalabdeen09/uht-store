@@ -16,21 +16,26 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Install Flutter
-        run: |
-          git clone --depth 1 --branch 3.22.3 https://github.com/flutter/flutter.git /opt/flutter
-          echo "/opt/flutter/bin" >> $GITHUB_PATH
-          echo "/opt/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
-
-      - name: Create local.properties
-        run: |
-          echo "flutter.sdk=/opt/flutter" > android/local.properties
-          echo "flutter.versionCode=1" >> android/local.properties
-          echo "flutter.versionName=1.0" >> android/local.properties
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.3'
 
       - run: flutter config --no-analytics
 
+      - name: Generate clean Flutter project
+        run: |
+          cd /tmp
+          flutter create --org com.uht --project-name uht_store template_app
+          cp -r template_app/android/* $GITHUB_WORKSPACE/android/
+          cp template_app/.gitignore $GITHUB_WORKSPACE/
+
       - run: flutter pub get
+
+      - name: Add local.properties
+        run: |
+          echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties
+          echo "flutter.versionCode=1" >> android/local.properties
+          echo "flutter.versionName=1.0" >> android/local.properties
 
       - run: flutter build apk --release
 
